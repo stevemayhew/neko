@@ -21,6 +21,8 @@
  */
 #include <neko.h>
 #include <stdio.h>
+#include <stdlib.h>
+
 #ifdef NEKO_WINDOWS
 #	include <windows.h>
 #endif
@@ -44,9 +46,12 @@ typedef struct {
 DEFINE_KIND(k_file);
 
 static void file_error( const char *msg, fio *f ) {
-	value a = alloc_array(2);
+	value a = alloc_array(3);
+    char error[8];
+    sprintf(error, "%d", errno);
 	val_array_ptr(a)[0] = alloc_string(msg);
-	val_array_ptr(a)[1] = alloc_string(val_string(f->name));
+	val_array_ptr(a)[1] = alloc_string(error);
+	val_array_ptr(a)[2] = alloc_string(val_string(f->name));
 	val_throw(a);
 }
 
